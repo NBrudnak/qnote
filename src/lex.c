@@ -5,7 +5,8 @@ Lexer* createLexer(){
 
 	Lexer* lexer = malloc(sizeof(Lexer));
 	lexer->cur = 0;
-	lexer->buffer = 0;
+	lexer->tbcur = 0;
+	lexer->buffer = " ";
 	return lexer;
 
 }
@@ -37,120 +38,144 @@ Token* lexerCreateToken(int type, char* value){
 	Token* tok= malloc(sizeof(Token));
 	tok->type = type;
 	tok->value = value;
-	printf("token create with type: %d\n",type);
+	printf("token create with type: %d and value: %s\n",type, value);
 	return tok;
 }
 		
 void lexerloop(Lexer* lexer){
 
-//	printf("thing: %ld\n", (strlen(lexer->buffer)));
-
-//	printf("%s\n", lexer->buffer);
 	while(lexer->cur<strlen(lexer->buffer)){
 
+		lexer->tempBuffer[lexer->tbcur]=lexer->buffer[lexer->cur];
 		lexerLex(lexer);
-//		printf("char: %c\n", lexer->buffer[lexer->cur]);
-
 	}
 }
 
+void lexerHandleID(Lexer* lexer){
+
+	lexer->tempBuffer[strlen(lexer->tempBuffer)-1] = '\0';
+	lexer->tokArr[lexer->curTok] =
+		lexerCreateToken(ID,lexer->tempBuffer);
+	lexer->curTok++;
+}
 void lexerLex(Lexer* lexer){
+
+
 
 	switch(lexer->buffer[lexer->cur]){
 
-		case 'd':
-			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(D," ");
-			lexer->cur++;
-			lexer->curTok++;
-			break;
-
 		case '>':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(GR," ");
 
+			
 		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->tbcur = 0;
+
+
 			
 			break;
 
 		case '*':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(SD," ");
 
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
-			break;
-		case 'E':
-			if(lexer->buffer[lexer->cur+1]='X'){
-				lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(EX," ");
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 
-				lexer->cur+2;
-				lexer->curTok++;
-
-			}
 			break;
 
 		case ';':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(SEMI," ");
-
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+
 			break;
 
 		case ':':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
+
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(COLON," ");
 
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 			break;
 		
 		case '{':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
+
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(LBRACKET," ");
 
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 			break;
 
 		case '}':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
+
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(RBRACKET," ");
 
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 			break;
 
 		case '[':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
+
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(LBRACE," ");
-
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 			break;
 
 		case ']':
+			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
+				lexerHandleID(lexer);
+			}
+
 			lexer->tokArr[lexer->curTok] = 
 				lexerCreateToken(RBRACE," ");
 
-			lexer->cur++;
+		        lexer->cur++;
 			lexer->curTok++;
+			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
 			break;
 
 		default:
 			lexer->cur++;
+			lexer->tbcur++;
 			break;
-	}
-
 }
-
-
-	
-
-
+}
 
 
 

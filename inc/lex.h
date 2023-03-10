@@ -3,20 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 enum Types{
-	D,//d
-	SD,//*
-	EX,//EX
 	GR,//>
 	SEMI,//;
 	COLON,//:
-	ID,
-	value,
+	SD,//*
+	ID,//note id
+	CONT,//note contents
 	LBRACKET,//{
 	RBRACKET,//}
 	LBRACE,//[
 	RBRACE,//]
-
 };
 
 typedef struct Token{
@@ -29,8 +27,9 @@ typedef struct Token{
 
 typedef struct Lexer{
 
-	int cur, curTok;
+	int cur, curTok, tbcur;
 	char *buffer;
+	char tempBuffer[50];
 	FILE* fp;
 	Token* tokArr[200];
 
@@ -41,4 +40,5 @@ Lexer* readFileToString(Lexer* lex, char* fileName);
 Token* lexerCreateToken(int type,char* value);
 void lexerLex(Lexer* lexer);
 void lexerloop(Lexer*lexer);
+void lexerHandleID(Lexer* lexer);
 #endif 

@@ -2,19 +2,21 @@
 #define NOTE_H
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "lex.h"
 typedef struct NOTE{
 
-	char* content;
+	char* ID;
 	struct NOTE* parent;
-	struct NOTE* left;
-	struct NOTE* right;
+	struct NOTE* child;
 }Note;
+typedef struct OPERATORE{
+	
+	int type;
+	
+}Operator;
 
-Note* createNote(char* content);
 
-Note* insertNote(Note* parent, char* content, int lor);
-void fakePopulateTree(Note* root);
-void listNotes(Note* root);
+Note* createNote(Token* tok);
+void insertNote(Note* parent, Note* child);
 
 #endif

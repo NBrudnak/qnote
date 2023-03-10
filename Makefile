@@ -1,24 +1,17 @@
 IDIR =inc
+ODIR=obj
+SDIR = src
+
 CC=gcc
 CFLAGS=-I$(IDIR) -Wall -g
 
-ODIR=obj
-LDIR =../lib
-
-_DEPS = cli.h note.h user.h lex.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-
-_OBJ = main.o note.o cli.o user.o lex.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
-SDIR = src
-$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-qlex: $(OBJ)
+DEPS = $(wildcard $(IDIR)/*.h)
+SRC = $(wildcard $(SDIR)/*.c)
+OBJ = $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(SRC))
+qnote: $(SRC)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ 
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ && rm qnote	
