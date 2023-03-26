@@ -15,6 +15,7 @@ enum ID{
 	RBRACKET,//}
 	LBRACE,//[
 	RBRACE,//]
+	__ENDPROGRAM__,
 };
 
 typedef struct Token{

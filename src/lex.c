@@ -52,6 +52,7 @@ void lexerloop(Lexer* lexer){
 		lexerLex(lexer);
 		//printf("lexer buffer: %s\n", lexer->tempBuffer);
 	}
+	lexerCreateToken(__ENDPROGRAM__, ">:)");
 }
 
 // handles char data between operands

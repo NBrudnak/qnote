@@ -15,7 +15,8 @@ void main(int argc, char** argv){
 	arg = initArg(argc, argv, arg);
 	handleArg(arg, lexer);
 	lexerloop(lexer);
-	Root* root = noteParseTokens(lexer->tokArr, lexer->curTok);
+	Root* root = noteCreateRoot(lexer->tokArr, lexer->curTok);
+	root = noteParseTokens(root); 
 
 }
 

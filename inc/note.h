@@ -14,8 +14,10 @@ typedef struct NOTE{
 typedef struct ROOT{
 
 	Note* headerChild;
-	int noteCount;
 	char* metadata;
+	Token* tokArr[200];
+	int numTokens;
+	int curTok;
 }Root;
 
 typedef struct OPERATOR{
@@ -24,8 +26,8 @@ typedef struct OPERATOR{
 	
 }Operator;
 
-
+Root* noteCreateRoot(Token* tokArr[], int numTokens);
 Note* noteCreateNote(Token* tokArr[]);
 void NoteInsertNote(Note* parent, Note* child);
-Root* noteParseTokens(Token* toakArr[], int numTokens);
+Root* noteParseTokens(Root* root);
 #endif

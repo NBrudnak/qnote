@@ -1,6 +1,16 @@
 #include "note.h"
 
 
+Root* noteCreateRoot(Token* tokArr[], int numTokens){
+
+	Root* root = malloc(sizeof(root));
+	root->headerChild = NULL;
+	root->metadata = "test metatdata";
+	memcpy(root->tokArr, tokArr, sizeof(root->tokArr));
+	root->numTokens = numTokens;
+	root->curTok = 0;
+	return root;
+}	
 
 Note* noteCreateNote(Token* tokArr[]){
 
@@ -10,27 +20,29 @@ Note* noteCreateNote(Token* tokArr[]){
 	return newNote;
 }	
 
+
 void noteInsertNote(Note* parent, Note* child){
 
 	parent->child = child;
 }
 
-Root* noteParseTokens(Token* tokArr[], int numTokens){
-
-	Root* root = malloc(sizeof(Root));
-	root->headerChild = NULL;
-	root->metadata = "test file";
-	root->noteCount = 0;
+//Note* noteDefineNote(Root* root){
 	
-	int i=0;
-	while (root->noteCount<numTokens){
 
-		if ( tokArr[i]->ID=GR){
 
-			Note* curNote = noteCreateNote(tokArr);
+Root* noteParseTokens(Root* root){
+
+	printf("number of Tokens to proccess: %d\n",root->numTokens);
+
+	while (root->tokArr[root->curTok]->ID!=__ENDPROGRAM__){
+
+		if ( root->tokArr[root->curTok]->ID==GR){
+
 			printf("note created\n");
-			root->noteCount++;
 		}
+		
+		printf("nothing made\n");
+		root->curTok++;
 	}
 
 	return root;
