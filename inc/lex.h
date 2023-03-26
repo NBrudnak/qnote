@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-enum Types{
+enum ID{
 	GR,//>
 	SEMI,//;
 	COLON,//:
 	SD,//*
-	ID,//note id
+	STRING,//note id
 	CONT,//note contents
 	LBRACKET,//{
 	RBRACKET,//}
@@ -19,7 +19,7 @@ enum Types{
 
 typedef struct Token{
 
-	int type;
+	int ID;
 	char* value;
 
 }Token;
@@ -37,8 +37,8 @@ typedef struct Lexer{
 
 Lexer* createLexer();
 Lexer* readFileToString(Lexer* lex, char* fileName);
-Token* lexerCreateToken(int type,char* value);
+Token* lexerCreateToken(int ID,char* value);
 void lexerLex(Lexer* lexer);
 void lexerloop(Lexer*lexer);
-void lexerHandleID(Lexer* lexer);
+void lexerHandleString(Lexer* lexer);
 #endif 

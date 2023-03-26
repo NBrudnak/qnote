@@ -3,12 +3,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lex.h"
+
 typedef struct NOTE{
 
 	char* ID;
 	struct NOTE* parent;
 	struct NOTE* child;
 }Note;
+
+typedef struct ROOT{
+
+	Note* headerChild;
+	int noteCount;
+	char* metadata;
+}Root;
+
 typedef struct OPERATORE{
 	
 	int type;
@@ -16,7 +25,7 @@ typedef struct OPERATORE{
 }Operator;
 
 
-Note* createNote(Token* tok);
-void insertNote(Note* parent, Note* child);
-
+Note* noteCreateNote(Token* tok);
+void NoteInsertNote(Note* parent, Note* child);
+Root* noteParseTokens(Token* toakArr[]);
 #endif

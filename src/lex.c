@@ -1,6 +1,7 @@
 #include "lex.h"
 
 //allocate memory for lexer
+//lexer struct is manipulated via one master pointer
 Lexer* createLexer(){
 
 	Lexer* lexer = malloc(sizeof(Lexer));
@@ -10,7 +11,7 @@ Lexer* createLexer(){
 	return lexer;
 
 }
-
+//populates lexer buffer with input
 Lexer* readFileToString(Lexer* lex, char* fileName){
 
 	long length;
@@ -32,32 +33,46 @@ Lexer* readFileToString(Lexer* lex, char* fileName){
 }
 
 
-
-Token* lexerCreateToken(int type, char* value){
+//Universal token allocator
+Token* lexerCreateToken(int ID, char* value){
 
 	Token* tok= malloc(sizeof(Token));
-	tok->type = type;
+	tok->ID = ID;
 	tok->value = value;
-	printf("token create with type: %d and value: %s\n",type, value);
+	printf("token create with ID: %d and value: %s\n",ID, value);
 	return tok;
 }
-		
+
+//main lexer loop
+//*consider refactoring only loops one thing but may provide funcitonality later
 void lexerloop(Lexer* lexer){
 
 	while(lexer->cur<strlen(lexer->buffer)){
 
-		lexer->tempBuffer[lexer->tbcur]=lexer->buffer[lexer->cur];
 		lexerLex(lexer);
+		//printf("lexer buffer: %s\n", lexer->tempBuffer);
 	}
 }
 
-void lexerHandleID(Lexer* lexer){
+// handles char data between operands
+void lexerHandleString(Lexer* lexer){
 
-	lexer->tempBuffer[strlen(lexer->tempBuffer)-1] = '\0';
+	//sets null terminator at end of string
+	lexer->tempBuffer[strlen(lexer->tempBuffer)] = '\0';
+	//add sting as token to master token array
 	lexer->tokArr[lexer->curTok] =
-		lexerCreateToken(ID,lexer->tempBuffer);
+		lexerCreateToken(STRING,lexer->tempBuffer);
+	//prep next token
 	lexer->curTok++;
+	//set tempbuffer index to 0
+	lexer->tbcur= 0;
+	printf("proccessing burrfer {VAL}:\n %s\n",lexer->tempBuffer);
+	//reset tempbuffer 
+	memset(lexer->tempBuffer,0, sizeof(lexer->tempBuffer));
 }
+
+//main switch for operator identification
+//also responsible for tempbuffer population
 void lexerLex(Lexer* lexer){
 
 
@@ -65,116 +80,113 @@ void lexerLex(Lexer* lexer){
 	switch(lexer->buffer[lexer->cur]){
 
 		case '>':
-			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
-			}
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(GR," ");
+				lexerCreateToken(GR,">");
 
-			
-		        lexer->cur++;
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
-			lexer->tbcur = 0;
-
-
-			
+			lexer->cur++;
 			break;
 
 		case '*':
+			//if tempbuffer contains an ID proccess ID
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
+			//create token for identified operator
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(SD," ");
-
-		        lexer->cur++;
+				lexerCreateToken(SD,"*");
+			
+			//set indexs for token and lexer buffer
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
 
 			break;
 
 		case ';':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(SEMI," ");
-		        lexer->cur++;
+				lexerCreateToken(SEMI,";");
+
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
 
 			break;
 
 		case ':':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(COLON," ");
+				lexerCreateToken(COLON,":");
 
-		        lexer->cur++;
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
+
 			break;
 		
 		case '{':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(LBRACKET," ");
+				lexerCreateToken(LBRACKET,"{");
 
-		        lexer->cur++;
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
 			break;
 
 		case '}':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(RBRACKET," ");
+				lexerCreateToken(RBRACKET,"}");
 
-		        lexer->cur++;
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
 			break;
 
 		case '[':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(LBRACE," ");
-		        lexer->cur++;
+				lexerCreateToken(LBRACE,"[");
+
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
 			break;
 
 		case ']':
 			if(isalnum(lexer->tempBuffer[0])||lexer->tempBuffer[0] == ' '){
-				lexerHandleID(lexer);
+				lexerHandleString(lexer);
 			}
 
 			lexer->tokArr[lexer->curTok] = 
-				lexerCreateToken(RBRACE," ");
+				lexerCreateToken(RBRACE,"]");
 
-		        lexer->cur++;
 			lexer->curTok++;
-			memset(lexer->tempBuffer,0,strlen(lexer->tempBuffer));
+			lexer->cur++;
+
 			break;
 
 		default:
+			//if no operator is detected put char into tempbufer and update 
+			//tempbuffer and lexerbuffer indexes 
+			lexer->tempBuffer[lexer->tbcur]=lexer->buffer[lexer->cur];
 			lexer->cur++;
 			lexer->tbcur++;
 			break;
-}
+	}
+
+
+	
 }
 
 

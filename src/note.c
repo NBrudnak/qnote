@@ -2,7 +2,7 @@
 
 
 
-Note* createNote(Token* tok){
+Note* noteCreateNote(Token* tok){
 
 	Note* newNote = malloc((sizeof(Note)));
 	newNote-> ID = tok->value;
@@ -11,9 +11,32 @@ Note* createNote(Token* tok){
 	return newNote;
 }	
 
-void insertNote(Note* parent, Note* child){
+void noteInsertNote(Note* parent, Note* child){
 
 	parent->child = child;
 }
 
+Root* noteParseTokens(Token* tokArr[]){
 
+	Root* root = malloc(sizeof(Root));
+	root->headerChild = NULL;
+	root->metadata = "test file";
+	root->noteCount = 0;
+
+	while (root->noteCount<=(sizeof(&tokArr)/sizeof(tokArr[0]))){
+
+		
+	}
+
+	return root;
+}
+
+
+
+
+
+
+
+
+
+			
