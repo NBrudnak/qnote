@@ -66,7 +66,7 @@ void lexerHandleString(Lexer* lexer){
 	lexer->curTok++;
 	//set tempbuffer index to 0
 	lexer->tbcur= 0;
-	printf("proccessing burrfer {VAL}:\n %s\n",lexer->tempBuffer);
+	printf("proccessing buffer {VAL}:\n %s\n",lexer->tempBuffer);
 	//reset tempbuffer 
 	memset(lexer->tempBuffer,0, sizeof(lexer->tempBuffer));
 }

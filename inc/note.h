@@ -18,14 +18,14 @@ typedef struct ROOT{
 	char* metadata;
 }Root;
 
-typedef struct OPERATORE{
+typedef struct OPERATOR{
 	
 	int type;
 	
 }Operator;
 
 
-Note* noteCreateNote(Token* tok);
+Note* noteCreateNote(Token* tokArr[]);
 void NoteInsertNote(Note* parent, Note* child);
-Root* noteParseTokens(Token* toakArr[]);
+Root* noteParseTokens(Token* toakArr[], int numTokens);
 #endif
